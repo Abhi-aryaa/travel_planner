@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Travel Planner</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <h1>✈️ Travel Planner</h1>
+    <select id="tripSelect" aria-label="Select trip"></select>
+    <button id="newTripBtn">+ New trip</button>
+    <button id="aiGenBtn" class="accent">✨ AI generate trip</button>
+    <span id="status" class="pill"></span>
+  </header>
+
+  <!-- Trip Budget progress bar (values computed by the server) -->
+  <section id="budgetBar" class="card budget hidden">
+    <div class="budget-head">
+      <strong id="tripTitle"></strong>
+      <span id="budgetText"></span>
+      <button id="editBudgetBtn" class="ghost">Edit budget</button>
+    </div>
+    <div class="progress"><div id="progEst" class="bar est"></div><div id="progAct" class="bar spent"></div></div>
+    <div class="legend"><span class="dot est"></span>Estimated <span class="dot spent"></span>Actual
+      <span id="budgetStatus" class="pill"></span></div>
+  </section>
+
+  <main id="app" class="grid hidden">
+    <section class="card col-timeline">
+      <h2>Itinerary timeline</h2>
+      <form id="activityForm" class="stack">
+        <input name="title" placeholder="Activity (e.g. Visit Amber Fort)" required />
+        <div class="row">
+          <input name="date" type="date" required />
+          <input name="time" type="time" value="09:00" required />
+        </div>
+        <div class="row">
+          <input name="estimated_cost" type="number" min="0" step="1" placeholder="Estimated cost" />
+          <select name="destination_id"><option value="">No destination</option></select>
+        </div>
+        <button>Add activity</button>
+      </form>
+      <div id="timeline" class="timeline"></div>
+    </section>
+
+    <section class="card col-map">
+      <h2>Map & destinations</h2>
+      <form id="placeForm" class="row">
+        <input id="placeQuery" placeholder="Search a place to pin…" required />
+        <button>Search</button>
+      </form>
+      <ul id="placeResults" class="results"></ul>
+      <div id="map"></div>
+      <div id="destinations" class="dest-grid"></div>
+    </section>
+
+    <section class="card col-side">
+      <h2>🤖 Trip assistant</h2>
+      <div id="chatLog" class="chat-log"></div>
+      <form id="chatForm" class="row">
+        <input id="chatInput" placeholder="Ask: how much budget is left?" required />
+        <button>Send</button>
+      </form>
+      <h2>📄 Travel documents</h2>
+      <form id="docForm" class="row">
+        <input id="docFile" type="file" accept=".pdf,.png,.jpg,.jpeg,.webp,.txt" required />
+        <button>Upload</button>
+      </form>
+      <ul id="docList" class="doc-list"></ul>
+    </section>
+  </main>
+
+  <p id="empty" class="empty hidden">No trips yet. Create one or let AI generate it ✨</p>
+
+  <dialog id="tripDialog">
+    <form method="dialog" id="tripForm" class="stack">
+      <h3>New trip</h3>
+      <input name="name" placeholder="Trip name" required />
+      <div class="row"><label>Start <input name="start_date" type="date" required /></label>
+        <label>End <input name="end_date" type="date" required /></label></div>
+      <div class="row"><input name="budget" type="number" min="0" placeholder="Total budget" required />
+        <input name="currency" value="INR" maxlength="3" /></div>
+      <div class="row"><button value="cancel" formnovalidate class="ghost">Cancel</button><button value="ok">Create</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="aiDialog">
+    <form method="dialog" id="aiForm" class="stack">
+      <h3>✨ Generate a trip with AI</h3>
+      <textarea name="prompt" rows="3" placeholder="e.g. 3 days in Jaipur under ₹15k, love forts and street food" required></textarea>
+      <div class="row"><button value="cancel" formnovalidate class="ghost">Cancel</button><button value="ok">Generate</button></div>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast"></div>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
